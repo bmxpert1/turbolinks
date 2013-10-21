@@ -321,4 +321,16 @@ else
 #   Turbolinks.pagesCached()
 #   Turbolinks.pagesCached(20)
 #   Turbolinks.supported
-@Turbolinks = { visit, pagesCached, supported: browserSupportsTurbolinks }
+@Turbolinks = { 
+  visit, 
+  pagesCached, 
+  supported: browserSupportsTurbolinks,
+  browserCompatibleDocumentParser,
+  cacheCurrentPage,
+  triggerEvent,
+  changePage,
+  extractTitleAndBody,
+  reflectRedirectedUrl,
+  resetScrollPosition
+}
+
