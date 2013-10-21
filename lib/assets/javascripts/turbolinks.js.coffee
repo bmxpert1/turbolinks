@@ -94,8 +94,13 @@ reflectNewUrl = (url) ->
   if url isnt referer
     window.history.pushState { turbolinks: true, position: currentState.position + 1 }, '', url
 
-reflectRedirectedUrl = ->
-  if location = xhr.getResponseHeader 'X-XHR-Redirected-To'
+reflectRedirectedUrl = (overrideXhr) ->
+  if overrideXhr?
+    xhrToUse = overrideXhr
+  else
+    xhrToUse = xhr
+
+  if location = xhrToUse.getResponseHeader 'X-XHR-Redirected-To'
     preservedHash = if removeHash(location) is location then document.location.hash else ''
     window.history.replaceState currentState, '', location + preservedHash
 
