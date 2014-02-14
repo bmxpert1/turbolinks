@@ -342,7 +342,7 @@ class Click
 # Delay execution of function long enough to miss the popstate event
 # some browsers fire on the initial page load.
 bypassOnLoadPopstate = (fn) ->
-  setTimeout fn, 500
+  setTimeout fn, 5000
 
 installDocumentReadyPageEventTriggers = ->
   document.addEventListener 'DOMContentLoaded', ( ->
