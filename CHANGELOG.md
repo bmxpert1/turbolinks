@@ -1,4 +1,80 @@
-## Turbolinks 2.0.0 (unreleased) ##
+## Turbolinks (master)
+
+*   Always use absolute URLs as cache keys and in state objects.  Eliminates possibility of multiple 
+    cache objects for the same page. 
+
+    *Nick Reed*
+
+*   Allow periods in a link's query string (ex. `/users?sort=account.email`) without it interfering with 
+    the extension check.
+
+    *Kuba Kuźma*
+
+*   Don't process links with no `href` attribute.
+
+    *Nick Reed*
+
+## Turbolinks 2.2.1 (January 30, 2014)
+
+*   Do not store redirect_to location in session if the request did not come from Turbolinks.  Fixes
+    rare bug that manifests when directing items like image tag sources through ActionController and 
+    subsequently redirecting those requests to a different origin. This would cause the session variable 
+    to be set but never deleted (since the redirect request was external), resulting in the next request
+    being declared a redirect no matter what. 
+
+    *Nick Reed*
+
+*   Extend handling of Firefox [history.state bug](https://bugzilla.mozilla.org/show_bug.cgi?id=949471) 
+    through Firefox 27.
+
+    *Nick Reed*
+    
+*   Fix handling of `:back` option in ActionView helpers `url_for` and `link_to`.
+
+    *Nick Reed*
+
+*   Delay binding of history change handler long enough to bypass the popstate event that some
+    browsers fire on the initial page load.  Prevents duplicate requests in certain scenarios when
+    traversing the browser history.
+
+    *Anton Pawlik + Nick Reed*
+
+## Turbolinks 2.2.0 (January 10, 2014)
+
+*   Add transition cache feature. When enabled, cached copies of pages will be shown
+    before fetching and displaying a new copy from the server. A individual page can be opted-out
+    by adding `data-no-transition-cache` to any DOM element on the page.
+
+    *Matt De Leon*
+
+## Turbolinks 2.1.0 (December 17, 2013)
+
+*   Improve browser support for `noscript` tag removal.
+
+    *Nick Reed*
+
+*   Add a `page:expire` event for garbage collecting purposes.  Triggered when a page is deleted
+    from the cache due to reaching the cache size limit.  Pass the cached page object in with the
+    event data. 
+
+    *Nick Reed*
+
+*   Allow configuration for additional link extensions to be processed by Turbolinks beyond `.html`.
+
+    ```coffeescript
+    Turbolinks.allowLinkExtensions()                # => ['html']
+    Turbolinks.allowLinkExtensions 'md'             # => ['html', 'md']
+    Turbolinks.allowLinkExtensions 'coffee', 'scss' # => ['html', 'md', 'coffee', 'scss']
+    ```
+
+    *Nick Reed*
+
+*   Handle [bug](https://bugzilla.mozilla.org/show_bug.cgi?id=949471) in Firefox 26 where the initial
+    value of history.state is undefined instead of null, which led to Turbolinks not being initialized.
+
+    *Nick Reed*
+
+## Turbolinks 2.0.0 (December 4, 2013) ##
 
 *   Trigger page:update on page:change as well as jQuery's ajaxSuccess, if jQuery is available.
     This allows you to bind listeners to both full page changes and partial ajax updates.
@@ -7,7 +83,6 @@
     
     *DHH*
     
-
 *   Trigger page:change on DOMContentLoaded so you can bind initializers that need to be run 
     either on initial or subsequent page loads. This might be backwards incompatible, so we
     are also bumping the major version.
@@ -22,6 +97,12 @@
     is initialized or not.
 
     *Nick Reed*
+
+## Turbolinks 1.3.1 (November 14, 2013) ##
+
+*   Accommodate for bug in Chrome 31+ that causes `assetsChanged` to always return true. (#278)
+
+    *Andrew Volozhanin + Nick Reed*
     
 ## Turbolinks 1.3.1 (November 14, 2013) ##
 

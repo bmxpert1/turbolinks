@@ -55,12 +55,30 @@ Turbolinks.pagesCached();
 Turbolinks.pagesCached(20);
 ```
 
+When a page is removed from the cache due to the cache reaching its size limit, the `page:expire` event is triggered.  Listeners bound to this event can access the cached page object using `event.originalEvent.data`.  Keys of note for this page cache object include `url`, `body`, and `title`.  
+
 To implement a client-side spinner, you could listen for `page:fetch` to start it and `page:receive` to stop it.
 
     document.addEventListener("page:fetch", startSpinner);
     document.addEventListener("page:receive", stopSpinner);
 
 DOM transformations that are idempotent are best. If you have transformations that are not, hook them to happen only on `page:load` instead of `page:change` (as that would run them again on the cached pages).
+
+Transition Cache: A Speed Boost
+-------------------------------
+
+Transition Cache, added in v2.2.0, makes loading cached pages instantaneous. Once a user has visited a page, returning later to the page results in an instant load.
+
+For example, if Page A is already cached by Turbolinks and you are on Page B, clicking a link to Page A will *immediately* display the cached copy of Page A. Turbolinks will then fetch Page A from the server and replace the cached page once the new copy is returned.
+
+To enable Transition Cache, include the following in your javascript:
+```javascript
+Turbolinks.enableTransitionCache();
+```
+
+The one drawback is that dramatic differences in appearence between a cached copy and new copy may lead to a jarring affect for the end-user. This will be especially true for pages that have many moving parts (expandable sections, sortable tables, infinite scrolling, etc.).
+
+If you find that a page is causing problems, you can have Turbolinks skip displaying the cached copy by adding `data-no-transition-cache` to any DOM element on the offending page.
 
 Initialization
 --------------
@@ -89,7 +107,13 @@ By default, all internal HTML links will be funneled through Turbolinks, but you
 </div>
 ```
 
-Note that internal links to files containing a file extension other than **.html** will automatically be opted out of Turbolinks. So links to /images/panda.gif will just work as expected.
+Note that internal links to files containing a file extension other than **.html** will automatically be opted out of Turbolinks. So links to /images/panda.gif will just work as expected.  To whitelist additional file extensions to be processed by Turbolinks, use `Turbolinks.allowLinkExtensions()`.
+
+```javascript
+Turbolinks.allowLinkExtensions();                 // => ['html']
+Turbolinks.allowLinkExtensions('md');             // => ['html', 'md']
+Turbolinks.allowLinkExtensions('coffee', 'scss'); // => ['html', 'md', 'coffee', 'scss']
+```
 
 Also, Turbolinks is installed as the last click handler for links. So if you install another handler that calls event.preventDefault(), Turbolinks will not run. This ensures that you can safely use Turbolinks with stuff like `data-method`, `data-remote`, or `data-confirm` from Rails.
 
@@ -162,7 +186,7 @@ Installation
 
 1. Add `gem 'turbolinks'` to your Gemfile.
 1. Run `bundle install`.
-1. Add `//= require turbolinks` to your Javascript manifest file (usually found at `app/assets/javascripts/application.js`).
+1. Add `//= require turbolinks` to your Javascript manifest file (usually found at `app/assets/javascripts/application.js`). If your manifest requires both turbolinks and jQuery, make sure turbolinks is listed *after* jQuery.
 1. Restart your server and you're now using turbolinks!
 
 Language Ports
@@ -172,6 +196,8 @@ Language Ports
 
 * [Flask Turbolinks](https://github.com/lepture/flask-turbolinks) (Python Flask)
 * [ASP.NET MVC Turbolinks](https://github.com/kazimanzurrashid/aspnetmvcturbolinks)
+* [PHP Turbolinks Component](https://github.com/helthe/Turbolinks) (Symfony Component)
+* [PHP Turbolinks Package](https://github.com/frenzyapp/turbolinks) (Laravel Package)
 
 Credits
 -------
